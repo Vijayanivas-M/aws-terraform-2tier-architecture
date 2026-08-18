@@ -13,6 +13,45 @@ The code deploys a highly available, scalable 2-tier web application architectur
 *   **Application Load Balancer (ALB):** Distributes incoming HTTP web traffic across multiple instances in different Availability Zones.
 *   **Auto Scaling Group (ASG) & Launch Template:** Automatically provisions and manages `t3.micro` EC2 instances (running a Python HTTP server) based on demand and health checks.
 
+```mermaid
+graph TD
+    Internet((Internet)) --> IGW[Internet Gateway]
+    
+    subgraph VPC [AWS VPC: 10.0.0.0/16]
+        IGW --> ALB{Application Load Balancer \n Port 80}
+        
+        subgraph AZ1 [us-east-1a]
+            PUB1[Public Subnet 1 \n 10.0.1.0/24]
+            PRIV1[Private Subnet 1 \n 10.0.10.0/24]
+            PUB1 -.- PRIV1
+        end
+        
+        subgraph AZ2 [us-east-1b]
+            PUB2[Public Subnet 2 \n 10.0.2.0/24]
+            PRIV2[Private Subnet 2 \n 10.0.20.0/24]
+            PUB2 -.- PRIV2
+        end
+
+        ALB -->|Forwards to Port 8000| ASG
+        
+        subgraph ASG [Auto Scaling Group]
+            EC2_1(EC2 Instance 1 \n t3.micro)
+            EC2_2(EC2 Instance 2 \n t3.micro)
+        end
+        
+        PRIV1 -.-> EC2_1
+        PRIV2 -.-> EC2_2
+    end
+
+    classDef aws fill:#FF9900,stroke:#232F3E,stroke-width:2px,color:black;
+    classDef vpc fill:#F9F9F9,stroke:#333,stroke-width:2px;
+    classDef subnet fill:#E6F7FF,stroke:#0066CC,stroke-width:1px;
+    
+    class Internet,IGW,ALB,EC2_1,EC2_2 aws;
+    class VPC vpc;
+    class AZ1,AZ2,PUB1,PUB2,PRIV1,PRIV2 subnet;
+```
+
 *   **Virtual Private Cloud (VPC):** Custom isolated network environment.
 *   **High Availability:** 4 Subnets (2 Public, 2 Private) distributed across `us-east-1a` and `us-east-1b`.
 
