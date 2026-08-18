@@ -13,6 +13,12 @@ The code deploys a highly available, scalable 2-tier web application architectur
 *   **Application Load Balancer (ALB):** Distributes incoming HTTP web traffic across multiple instances in different Availability Zones.
 *   **Auto Scaling Group (ASG) & Launch Template:** Automatically provisions and manages `t3.micro` EC2 instances (running a Python HTTP server) based on demand and health checks.
 
+![Highly Available 2-Tier AWS Architecture](architecture-diagram.png)
+
+*   **Virtual Private Cloud (VPC):** Custom isolated network environment.
+*   **High Availability:** 4 Subnets (2 Public, 2 Private) distributed across `us-east-1a` and `us-east-1b`.
+*   ...
+
 ## 🛠️ Technologies Used
 *   **Cloud Provider:** Amazon Web Services (AWS)
 *   **Infrastructure as Code:** Terraform (v1.15.8)
